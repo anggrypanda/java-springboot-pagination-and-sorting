@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Invoice Management System</title>
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+	
+</head>
+<body>
+
+	<div class="container my-2">
+	<h1>Invoice List</h1>
+	
+	<a th:href = "@{/createInvoiceForm}" class="btn btn-primary btn-sm mb-3"> Add New Invoice</a>
+	
+		<table border="1" class = "table table-striped table-responsive-md">
+
+			<thead>
+				<tr>
+					<th>
+						<a th:href="@{'/page/' + ${currentPage} + '?sortField=invoiceId&sortDir=' + ${reverseSortDir}}">
+							ID</a>
+					</th>
+					<th>
+						<a th:href="@{'/page/' + ${currentPage} + '?sortField=number&sortDir=' + ${reverseSortDir}}">
+							Number</a>
+					</th>
+					<th>
+					<a th:href="@{'/page/' + ${currentPage} + '?sortField=issueDate&sortDir=' + ${reverseSortDir}}">
+							Issue Date</a>
+					</th>
+					<th>
+					<a th:href="@{'/page/' + ${currentPage} + '?sortField=dueDate&sortDir=' + ${reverseSortDir}}">
+							Due Date</a>
+					</th>
+					<th>
+						<a th:href="@{'/page/' + ${currentPage} + '?sortField=invoiceTotal&sortDir=' + ${reverseSortDir}}">
+							Total</a>
+					</th>
+					<th>
+						<a th:href="@{'/page/' + ${currentPage} + '?sortField=paymentTotal&sortDir=' + ${reverseSortDir}}">
+							Payed</a>
+					</th>
+					<th> Actions </th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="invoice : ${listInvoices}">
+					<td th:text="${invoice.invoiceId}"></td>
+					<td th:text="${invoice.number}"></td>
+					<td th:text="${invoice.issueDate}"></td>
+					<td th:text="${invoice.dueDate}"></td>
+					<td th:text="${invoice.invoiceTotal}"></td>
+					<td th:text="${invoice.paymentTotal}"></td>
+					<td> <a th:href="@{/updateInvoice/{invoiceId}(id=${invoice.invoiceId})}" class="btn btn-primary">Update</a>
+					    <a th:href="@{/deleteInvoice/{invoiceId}(id=${invoice.invoiceId})}" class="btn btn-danger">Delete</a>
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+		
+		<div th:if = "${totalPages > 1}">
+			<div class = "row col-sm-10">
+				<div class = "col-sm-6">
+					Total Invoices: [[${totalItems}]]
+				</div>
+
+				<div class = "col-sm-3">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+					</span>
+				</div>
+
+				<div class = "col-sm-1">
+					<a th:if="${currentPage >= 2}" th:href="@{'/page/' + ${currentPage - 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Previous</a>
+					<span th:unless="${currentPage >= 2}">Previous</span>
+				</div>
+
+				<div class = "col-sm-1">
+					<a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+					<span th:unless="${currentPage < totalPages}">Next</span>
+				</div>
+				
+				 <div class="col-sm-1">
+    				<a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+					<span th:unless="${currentPage < totalPages}">Last</span>
+   				 </div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
